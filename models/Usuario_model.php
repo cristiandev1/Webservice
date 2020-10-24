@@ -8,7 +8,7 @@ class Usuario_model extends CI_Model{
 
   //verificar se email já existe na base
   public function verificaUsuario($dados){
-    $sql = 'SELECT * FROM usuario WHERE email = ?';
+    $sql = 'SELECT id_usuario FROM usuario WHERE email = ?';
     $sql_values = array(
       $dados['email'],
     );
@@ -16,14 +16,47 @@ class Usuario_model extends CI_Model{
     return issetRegistro($rs);
   }
 
+
+
+  public function login($email,$senha){
+    $sql = 'SELECT nome, sobrenome, cidade, email, status, funcao FROM usuario WHERE (email = ? AND senha = ?)';
+    $sql_values = array(
+      $email,
+      $senha,
+    );
+    $rs = $this->blog->query($sql,$sql_values);
+    return issetRegistro($rs);
+  }
+
   //dados do usuario
   public function dados(){
-    $sql = 'SELECT nome, sobrenome, cidade, email, status FROM usuario WHERE id_usuario = ? ';
+    $sql = 'SELECT id_usuario, nome, sobrenome, cidade, email, status, funcao FROM usuario WHERE id_usuario = ? ';
     $sql_values = array(
       $this->usuarioglobal->id,
     );
     $rs = $this->blog->query($sql,$sql_values);
     return issetRegistro($rs);
+  }
+
+  public function posts(){
+    $sql = '
+    SELECT
+        p.id_post,
+        p.id_categoria,
+        p.titulo,
+        p.assunto,
+        p.data_postagem,
+        p.ativo,
+        cp.nome as nome_categoria
+    FROM usuario u
+    LEFT JOIN post p ON p.id_usuario = u.id_usuario
+    LEFT JOIN categoria_post cp ON cp.id_categoria = p.id_categoria
+    WHERE u.id_usuario = ?';
+    $sql_values = array(
+      $this->usuarioglobal->id,
+    );
+    $rs = $this->blog->query($sql,$sql_values);
+    return issetRegistros($rs);
   }
 
   //verifica se é usuario admin

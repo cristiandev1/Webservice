@@ -4,6 +4,38 @@ class Usuario extends CI_Controller{
   public function __construct(){
     parent::__construct();
     $this->load->model('usuario_model');
+    $this->load->model('categoria_model');
+  }
+
+  public function splash($url = true){
+    if(issetPost()){
+      if(isset($_POST['usuario'])){
+        $usuario = $this->usuario_model->dados();
+        $posts = $this->usuario_model->posts();
+        $categorias = $this->categoria_model->listar();
+
+
+        if($usuario != null){
+          $dados = array(
+            "id_usuario"=>$usuario->id_usuario,
+            "nome"=>$usuario->nome,
+            "sobrenome"=>$usuario->sobrenome,
+            "cidade"=>$usuario->cidade,
+            "cidade"=>$usuario->cidade,
+            "email"=>$usuario->email,
+            "status"=>$usuario->status,
+            "funcao"=>$usuario->funcao,
+            "categorias" => $categorias,
+            "postagens" => $posts == null ? [] : $posts,
+          );
+          echoReturn($dados);
+        }else{
+          return null;
+        }
+
+
+      }
+    }else{echoError('dados_vazios','Não foram encontrados dados');}
   }
 
   //DADOS DO USUARIO
@@ -22,6 +54,32 @@ class Usuario extends CI_Controller{
     }else{echoError('dados_vazios','Não foram encontrados dados');}
   }
 
+  //função para o login
+  public function login($url = true){
+    if(issetPost()){
+      if(isset($_POST['email']) || isset($_POST['senha'])){
+
+        $email = $_POST['email'];
+        $senha = $_POST['senha'];
+
+        $dados = array(
+          "email" => $email,
+          "senha" => $senha,
+        );
+
+        $issetUser = $this->usuario_model->verificaUsuario($dados);
+        if($issetUser){
+          $login = $this->usuario_model->login($email, $senha);
+
+          if($login){
+            echoReturn($login);
+          }else{echoError('senha_invalida','Senha informada incorreta');}
+
+        }else{echoError('email_inexistente','Email informado não existe.');}
+
+      }else{echoError('dados_nao_encontrados','Por favor preencha os campos para realizar esta ação.');}
+    }else{echoError('dados_vazios','Não foram encontrados dados');}
+  }
 
   //CADASTRAR USUARIO
   public function cadastrar($url = true){
