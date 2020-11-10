@@ -19,7 +19,7 @@ class Usuario_model extends CI_Model{
 
 
   public function login($email,$senha){
-    $sql = 'SELECT nome, sobrenome, cidade, email, status, funcao FROM usuario WHERE (email = ? AND senha = ?)';
+    $sql = 'SELECT id_usuario, nome, sobrenome, cidade, email, status, funcao FROM usuario WHERE (email = ? AND senha = ?)';
     $sql_values = array(
       $email,
       $senha,
@@ -45,13 +45,16 @@ class Usuario_model extends CI_Model{
         p.id_categoria,
         p.titulo,
         p.assunto,
-        p.data_postagem,
+        DATE_FORMAT(p.data_postagem,"%d/%m/%Y") as data_postagem,
         p.ativo,
         cp.nome as nome_categoria
     FROM usuario u
     LEFT JOIN post p ON p.id_usuario = u.id_usuario
     LEFT JOIN categoria_post cp ON cp.id_categoria = p.id_categoria
-    WHERE u.id_usuario = ?';
+    WHERE u.id_usuario = ?
+    ORDER BY p.data_postagem DESC';
+
+
     $sql_values = array(
       $this->usuarioglobal->id,
     );

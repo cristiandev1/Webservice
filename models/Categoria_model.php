@@ -28,7 +28,7 @@ class Categoria_model extends CI_Model{
 
   //listar categorias
   public function listar(){
-    $sql = 'SELECT * FROM categoria_post WHERE status = 0';
+    $sql = 'SELECT * FROM categoria_post WHERE status = 0 ORDER BY id_categoria DESC';
     $rs = $this->blog->query($sql);
     return issetRegistros($rs);
   }

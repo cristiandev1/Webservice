@@ -55,4 +55,13 @@ class Post extends CI_Controller{
       }else{echoError('usuario_nao_informado','Usuário não informado');}
     }else{echoError('dados_vazios','Não foram encontrados dados');}
   }
+
+  public function getPosts($url = true){
+    if(issetPost()){
+      if(isset($_POST['usuario'])){
+        $post = $this->post_model->getPosts();
+        echoReturn($post);
+      }else{echoError('usuario_nao_informado','Usuário não informado');}
+    }else{echoError('dados_vazios','Não foram encontrados dados');}
+  }
 }

@@ -18,8 +18,7 @@ class Categoria extends CI_Controller{
           $verificaAdmin = $this->usuario_model->verificaAdmin();
           if($verificaAdmin != "" || $verificaAdmin != null){
 
-            $descricao = preg_replace("/[^a-zA-z0-9]/", "", $this->input->post('nome'));
-            $cadastrar = $this->categoria_model->cadastrar($descricao);
+            $cadastrar = $this->categoria_model->cadastrar($this->input->post('nome'));
             if($cadastrar){
               echoReturn();
             }else{echoError('erro_cadastrar','Erro ao cadastrar');}

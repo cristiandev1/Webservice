@@ -21,11 +21,17 @@ class Post_model extends CI_Model{
 
   //listar postagens
   public function listar(){
-    $sql = "SELECT * FROM post WHERE id_blog = ?";
+    $sql = "SELECT * FROM post WHERE id_blog = ? ORDER BY data_postagem DESC";
     $sql_values = array(
       $this->blogglobal->id,
     );
     $rs = $this->blog->query($sql,$sql_values);
+    return issetRegistros($rs);
+  }
+
+  public function getPosts(){
+    $sql = "SELECT * FROM post";
+    $rs = $this->blog->query($sql);
     return issetRegistros($rs);
   }
 }
