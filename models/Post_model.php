@@ -30,7 +30,7 @@ class Post_model extends CI_Model{
   }
 
   public function getPosts(){
-    $sql = "SELECT * FROM post";
+    $sql = "SELECT * FROM post ORDER BY data_postagem DESC";
     $rs = $this->blog->query($sql);
     return issetRegistros($rs);
   }
